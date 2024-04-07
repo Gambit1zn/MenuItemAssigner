@@ -15,12 +15,11 @@ try:
     with open(users_file, 'r') as user_file:
         users = user_file.readlines()
 
-
 except FileNotFoundError:
-    print("User file not found. Please ensure files are in the same directory as the script and the name is correct")
+    sys.stderr.write("User file not found. Please ensure files are in the same directory as the script and the name "
+                     "is correct")
 
 # User consumption and validation
-print("Consuming and validating files...")
 user_objects = {}
 username_keys = []
 
@@ -43,8 +42,6 @@ for user in users:
 
             user_objects[username] = user_options
 
-print(f"data in {users_file} validated and consumed successfully!")
-
 # Menu consumption and validation
 menu_objects = {}
 
@@ -53,7 +50,8 @@ try:
         menu_items = menu_file.readlines()
 
 except FileNotFoundError:
-    print("Menu file not found. Please ensure files are in the same directory as the script and the name is correct")
+    sys.stderr.write("Menu file not found. Please ensure files are in the same directory as the script and the name "
+                     "is correct")
 
 for menu_item in menu_items:
     menu_item_partition = menu_item.split(',')
@@ -67,10 +65,7 @@ for menu_item in menu_items:
     menu_item_value = menu_item_partition[len(menu_item_partition) - 1].replace('\n', "").strip()
     menu_objects[menu_item_position] = menu_item_value
 
-print(f"data in {menus_file} validated and consumed successfully!")
-
 #  Mapping users to menu items
-print("Mapping and constructing json...")
 
 json_data = {}
 users = []
@@ -91,9 +86,7 @@ for key in username_keys:
     }
     users.append(user)
 
-json_data["users"] = json.dumps(users).replace("'", '"')
-print("Mapping and constructing json completed")
+json_data["users"] = json.dumps(users)
 
 # Write to output file
-print("Writing to output file...")
-print(json_data)
+sys.stdout.write(str(json_data).replace("'", '"'))
