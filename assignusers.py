@@ -1,11 +1,12 @@
 import sys
 import os
+import json
 
 if len(sys.argv) != 3:
     exit("Invalid number of arguments supplied. Usage: python assignusers.py users.txt menuitems.txt > output.json")
 
-os.chdir(os.path.dirname(sys.argv[0]))  # Sets the runtime directory to the scripts working directory, for some reason
-# this was looking in the bin folder
+# os.chdir(os.path.dirname(sys.argv[0]))  # Sets the runtime directory to the scripts working directory
+# (this was looking in the bin folder), ONLY NEEDED WHEN RUNNING THIS FROM PYCHARM VIRTUAL ENVIRONMENT
 
 users_file = sys.argv[1]
 menus_file = sys.argv[2]
@@ -21,6 +22,7 @@ except FileNotFoundError:
 # User consumption and validation
 print("Consuming and validating files...")
 user_objects = {}
+username_keys = []
 
 for user in users:
     partitions = user.replace("\n", "").split(" ")
@@ -31,6 +33,7 @@ for user in users:
         user_increment = user_increment + 1
         if user_increment == 1:  # the first partition will always be the username
             username = partition
+            username_keys.append(username)  # used later for mapping
         else:
             for option in partition:
                 if option in ['Y', 'N']:
@@ -65,5 +68,32 @@ for menu_item in menu_items:
     menu_objects[menu_item_position] = menu_item_value
 
 print(f"data in {menus_file} validated and consumed successfully!")
-print("Mapping and constructing object...")
 
+#  Mapping users to menu items
+print("Mapping and constructing json...")
+
+json_data = {}
+users = []
+
+for key in username_keys:
+    options = user_objects[key]
+    option_number = 0
+    user_menu_items = []
+
+    for user_option in options:
+        option_number = option_number + 1
+        if user_option == 'Y':
+            user_menu_items.append(menu_objects[option_number])
+
+    user = {
+        "username": key,
+        "menuItems": user_menu_items
+    }
+    users.append(user)
+
+json_data["users"] = json.dumps(users).replace("'", '"')
+print("Mapping and constructing json completed")
+
+# Write to output file
+print("Writing to output file...")
+print(json_data)
