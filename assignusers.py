@@ -67,7 +67,7 @@ for menu_item in menu_items:
 
 #  Mapping users to menu items
 
-json_data = {}
+root_object = {}
 users = []
 
 for key in username_keys:
@@ -86,7 +86,9 @@ for key in username_keys:
     }
     users.append(user)
 
-json_data["users"] = json.dumps(users)
+root_object["users"] = users
+json_data = json.dumps(root_object)
 
 # Write to output file
-sys.stdout.write(str(json_data).replace("'", '"'))
+sys.stdout.write(json_data)
+
