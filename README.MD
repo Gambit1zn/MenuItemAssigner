@@ -80,7 +80,7 @@ User4 YYYYY YYYYY
 
 ## Getting Started
 
-There are 2 ways of running the program, through pycharm IDE or through the terminal
+There are 2 ways of running the program, through pycharm IDE or through the terminal. Which ever way you use, please remember to add python to your **path** variable
 
 ### Pycharm
 
